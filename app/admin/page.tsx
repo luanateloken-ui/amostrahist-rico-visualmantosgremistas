@@ -40,7 +40,7 @@ export default async function AdminPage() {
     sourceUrl: r.source_url,
     published: r.published,
     metadata: r.metadata || {},
-    media: (r.media_assets || []).map((m: any) => ({
+    media: [...(r.media_assets || [])].sort((a:any,b:any)=>Number(a.position||0)-Number(b.position||0)).map((m: any) => ({
       id: m.id,
       url: m.url,
       thumbUrl: m.thumb_url,
