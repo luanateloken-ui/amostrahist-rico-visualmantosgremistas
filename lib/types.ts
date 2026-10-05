@@ -1,5 +1,14 @@
 export type ArchiveKind = 'kit' | 'crest' | 'supplier' | 'sponsor' | 'event';
 export type RightsStatus = 'open' | 'permission' | 'unknown' | 'restricted';
+export type VisualMode = 'auto' | 'image' | 'mockup';
+
+export type MockupSettings = {
+  scale?: number;
+  x?: number;
+  y?: number;
+  rotation?: number;
+  baseColor?: string;
+};
 
 export type MediaAsset = {
   id?: string;
@@ -10,6 +19,12 @@ export type MediaAsset = {
   license?: string | null;
   sourceUrl?: string | null;
   rightsStatus?: RightsStatus;
+};
+
+export type ArchiveMetadata = Record<string, unknown> & {
+  commonsTitle?: string;
+  visualMode?: VisualMode;
+  mockup?: MockupSettings;
 };
 
 export type ArchiveItem = {
@@ -26,8 +41,17 @@ export type ArchiveItem = {
   colors?: string[];
   sourceUrl?: string | null;
   published?: boolean;
-  metadata?: Record<string, unknown>;
+  metadata?: ArchiveMetadata;
   media?: MediaAsset[];
+};
+
+export type TimelineRecord = {
+  id: string;
+  kind: ArchiveKind;
+  yearStart: number;
+  yearEnd?: number | null;
+  title: string;
+  published: boolean;
 };
 
 export type Relation = {
