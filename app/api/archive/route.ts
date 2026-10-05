@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { demoItems } from '@/lib/demo';
 import { isAdminRequest } from '@/lib/auth';
 import { getServerSupabase } from '@/lib/supabase';
-import type { ArchiveItem } from '@/lib/types';
+import type { ArchiveItem, MediaAsset } from '@/lib/types';
+
+function sortedMedia(rows: any[] = []) {
+  return [...rows].sort((a,b) => Number(a.position || 0) - Number(b.position || 0));
+}
 
 function fromRow(row: any): ArchiveItem {
   return {
@@ -20,7 +25,7 @@ function fromRow(row: any): ArchiveItem {
     sourceUrl: row.source_url,
     published: row.published,
     metadata: row.metadata || {},
-    media: (row.media_assets || []).map((m:any) => ({
+    media: sortedMedia(row.media_assets || []).map((m:any) => ({
       id:m.id,
       url:m.url,
       thumbUrl:m.thumb_url,
@@ -87,5 +92,34 @@ export async function POST(req: NextRequest) {
 
   const { data, error } = await supabase.from('archive_items').upsert(row).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ item: data });
+
+  // Quando o admin envia a coleção media, ela passa a ser a fonte de verdade
+  // para aquele registro. Assim é possível ordenar, trocar a principal,
+  // remover referências e combinar uploads com URLs externas.
+  if (Array.isArray(body.media)) {
+    const media = (body.media as MediaAsset[]).filter(m => typeof m?.url === 'string' && m.url.trim());
+    const { error:deleteError } = await supabase.from('media_assets').delete().eq('archive_item_id', body.id);
+    if (deleteError) return NextResponse.json({ error:deleteError.message }, { status:500 });
+
+    if (media.length) {
+      const rows = media.map((m, position) => ({
+        archive_item_id:body.id,
+        url:m.url.trim(),
+        thumb_url:m.thumbUrl || null,
+        alt:m.alt || null,
+        author:m.author || null,
+        license:m.license || null,
+        source_url:m.sourceUrl || body.sourceUrl || null,
+        rights_status:m.rightsStatus || 'unknown',
+        position
+      }));
+      const { error:mediaError } = await supabase.from('media_assets').insert(rows);
+      if (mediaError) return NextResponse.json({ error:mediaError.message }, { status:500 });
+    }
+  }
+
+  revalidatePath('/');
+  revalidatePath('/admin');
+
+  return NextResponse.json({ item: data, mediaSaved:Array.isArray(body.media) ? body.media.length : undefined });
 }
