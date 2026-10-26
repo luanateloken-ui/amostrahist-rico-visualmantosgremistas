@@ -25,7 +25,7 @@ export default async function AdminPage() {
   ]);
 
   const rows = itemsRes.data || [];
-  const items: ArchiveItem[] = (rows.length ? rows : demoItems).map((r: any) => r.year_start ? ({
+  const items: ArchiveItem[] = rows.map((r: any) => ({
     id: r.id,
     kind: r.kind,
     yearStart: r.year_start,
@@ -50,14 +50,15 @@ export default async function AdminPage() {
       sourceUrl: m.source_url,
       rightsStatus: m.rights_status
     }))
-  }) : r);
+    }));
 
   return (
     <AdminStudio
-      design={designRes.data?.settings || defaultDesign}
-      items={items}
-      databaseConfigured
-      username={username}
-    />
-  );
+    design={designRes.data?.settings || defaultDesign}
+    items={items}
+    databaseConfigured={true}
+    databaseError={itemsRes.error?.message || designRes.error?.message || null}
+    username={username}
+  />
+);
 }
