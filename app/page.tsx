@@ -83,5 +83,14 @@ async function getData() {
 
 export default async function Page() {
   const { items, timeline, design } = await getData();
-  return <ArchiveExperience initialItems={items} timelineItems={timeline} design={design} />;
+
+  return (
+    <ArchiveExperience
+      initialItems={items}
+      timelineItems={timeline}
+      design={design}
+      dataMode="supabase"
+      dataError={null}
+    />
+  );
 }
