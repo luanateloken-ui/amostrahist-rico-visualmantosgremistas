@@ -100,16 +100,31 @@ export default function ArchiveExperience({
       return;
     }
 
-    const preferred = publicForYear.find(i => mode === 'all' || i.kind === mode) || publicForYear[0];
-   const targetMode: Mode = 'kit';
 
-const targetItems = initialItems
-  .filter(i => i.kind === targetMode)
-  .sort(
-    (a, b) =>
-      a.yearStart - b.yearStart ||
-      a.title.localeCompare(b.title, 'pt-BR')
-  );
+    const preferred = publicForYear[0];
+
+    const targetMode: Mode = 'kit';
+
+    const targetItems = initialItems
+      .filter(i => i.kind === targetMode)
+      .sort(
+        (a, b) =>
+          a.yearStart - b.yearStart ||
+          a.title.localeCompare(b.title, 'pt-BR')
+      );
+
+    const targetIndex = targetItems.findIndex(
+      i => i.id === preferred.id
+    );
+
+    setMode(targetMode);
+    setQuery('');
+    setIndex(Math.max(0, targetIndex));
+    setDetail(false);
+    setDetailMediaIndex(0);
+    setTimelineNotice('');
+  };
+
 
   const vars = {
     '--bg':design.background,'--surface':design.surface,'--ink':design.ink,'--accent':design.accent,'--accent2':design.accent2,
