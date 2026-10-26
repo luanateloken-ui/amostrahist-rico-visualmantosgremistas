@@ -75,3 +75,4 @@ O sistema foi deliberadamente desenhado para **não copiar em massa conteúdo pr
 
 ## Wireframes
 Os dois desenhos fornecidos estão guardados em `docs/reference/` apenas como referência de projeto.
+Atualização de sincronização com a Vercel.
