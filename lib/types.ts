@@ -25,6 +25,29 @@ export type ArchiveMetadata = Record<string, unknown> & {
   commonsTitle?: string;
   visualMode?: VisualMode;
   mockup?: MockupSettings;
+  season?: string;
+  competition?: string;
+  collection?: string;
+  pattern?: string;
+  collar?: string;
+  material?: string;
+  stripeDirection?: string;
+  stripeWidth?: string;
+  visualNotes?: string;
+  crestNotes?: string;
+  crestImageUrl?: string;
+  crestVariation?: string;
+  sponsorPlacement?: string;
+  supplierPlacement?: string;
+  numbering?: string;
+  typography?: string;
+  sleeves?: string;
+  historicalContext?: string;
+  identityInterpretation?: string;
+  stripeSequence?: string;
+  paletteNotes?: string;
+  historicalPhotoNotes?: string;
+  analysisSources?: string;
 };
 
 export type ArchiveItem = {
@@ -73,4 +96,22 @@ export type DesignSettings = {
   texture: 'none' | 'grain' | 'grid';
   displayFont: string;
   bodyFont: string;
+
+  wordmarkPrimary: string;
+  wordmarkAccent: string;
+  wordmarkRange: string;
+  heroLabel: string;
+  searchPlaceholder: string;
+  studioLinkLabel: string;
+
+  showSearch: boolean;
+  showCompare: boolean;
+  showRelations: boolean;
+  showStudioLink: boolean;
+
+  relationsKicker: string;
+  relationsTitle: string;
+  relationsText: string;
+  footerLeft: string;
+  footerRight: string;
 };
