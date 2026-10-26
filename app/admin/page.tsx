@@ -16,7 +16,7 @@ export default async function AdminPage() {
 
   const sb = getServerSupabase();
   if (!sb) {
-    return <AdminStudio design={defaultDesign} items={demoItems} databaseConfigured={false} username={username} />;
+    return <AdminStudio design={defaultDesign} items={demoItems} databaseConfigured={false} databaseError="Supabase não configurado." username={username} />;
   }
 
   const [itemsRes, designRes] = await Promise.all([
